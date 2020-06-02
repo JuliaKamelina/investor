@@ -17,17 +17,20 @@ def parse_args():
 
     return parser.parse_args()
 
-def format_output(backtrack, profit, lots, S, output_file):
+def format_output(indexes, profit, lots, S, output_file):
     j = S
     out_file = open(output_file, 'w+')
     out_file.write('%d\n' % profit)
-    outs = []
-    for i in range(len(lots), 0, -1):
-        if j != backtrack[i][j]:
-            outs.append((lots[i - 1].day, lots[i - 1].name, lots[i - 1].price/10, lots[i - 1].amount))
-            j = backtrack[i][j]
-    outs.reverse()
-    for out in outs:
+    # outs = []
+    # for i in range(len(lots), 0, -1):
+    #     if j != backtrack[i][j]:
+    #         outs.append((lots[i - 1].day, lots[i - 1].name, lots[i - 1].price/10, lots[i - 1].amount))
+    #         j = backtrack[i][j]
+    # outs.reverse()
+    # for out in outs:
+    #     out_file.write('%d %s %f %d\n' % out)
+    for i in indexes:
+        out = (lots[i].day, lots[i].name, lots[i].price/10, lots[i].amount)
         out_file.write('%d %s %f %d\n' % out)
     out_file.close()
 
@@ -58,28 +61,33 @@ def main():
         if args.input_file is None:
             sys.exit('Input file expected')
         lots_values, lots, S, _, _ = read_lots_from_file(args.input_file)
-        backtrack, profit = optimized_solve(lots_values, S)
-        format_output(backtrack, profit, lots, S, args.output_file)
+        out = optimized_solve(lots_values, S)
+        profit, indexes = out[0, 0], out[0, 1:]
+        format_output(indexes, profit, lots, S, args.output_file)
     else:
         if args.input_file:
             lots_values, lots, S, N, M = read_lots_from_file(args.input_file)
             if args.algorithm == 'profile_optimized':
-                backtrack, profit = optimized_solve(lots_values, S)
-                format_output(backtrack, profit, lots, S, args.output_file)
+                out = optimized_solve(lots_values, S)
+                profit, indexes = out[0, 0], out[0, 1:]
+                format_output(indexes, profit, lots, S, args.output_file)
                 run(lots_values, S, N, M, args.output_file)
             else:
-                backtrack, profit = solve(lots, S)
-                format_output(backtrack, profit, lots, S, args.output_file)
+                out = solve(lots, S)
+                profit, indexes = out[0, 0], out[0, 1:]
+                format_output(indexes, profit, lots, S, args.output_file)
                 run(lots, S, N, M, args.output_file, nonoptimized=True)
         else:
             lots_values, lots = generate_input(args.N, args.M)
             if args.algorithm == 'profile_optimized':
-                backtrack, profit = optimized_solve(lots_values, args.S)
-                format_output(backtrack, profit, lots, args.S, args.output_file)
+                out = optimized_solve(lots_values, args.S)
+                profit, indexes = out[0, 0], out[0, 1:]
+                format_output(indexes, profit, lots, args.S, args.output_file)
                 run(lots_values, args.S, args.N, args.M, args.output_file)
             else:
-                backtrack, profit = solve(lots, args.S)
-                format_output(backtrack, profit, lots, args.S, args.output_file)
+                out = solve(lots, args.S)
+                profit, indexes = out[0, 0], out[0, 1:]
+                format_output(indexes, profit, lots, args.S, args.output_file)
                 run(lots, args.S, args.N, args.M, args.output_file, nonoptimized=True)
 
 if __name__ == '__main__':

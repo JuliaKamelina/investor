@@ -23,11 +23,11 @@ def generate_input(n, m):
 
 @profile
 def mem_profile(lots, solver, s):
-    b, profit = solver(lots, s)
+    d = solver(lots, s)
 
 def time_profile(lots, solver, s, n, m):
     start_time = time.time()
-    _, _ = solver(lots, s)
+    _ = solver(lots, s)
     el_time = time.time() - start_time
     print(n, m, s, el_time, sep=" ")
 
