@@ -18,12 +18,16 @@ def parse_args():
     return parser.parse_args()
 
 def format_output(indexes, profit, lots, output_file):
-    out_file = open(output_file, 'w+')
-    out_file.write('%d\n' % profit)
-    for i in indexes:
-        out = (lots[i].day, lots[i].name, lots[i].price/10, lots[i].amount)
-        out_file.write('%d %s %f %d\n' % out)
-    out_file.close()
+    try:
+        out_file = open(output_file, 'w+')
+        out_file.write('%d\n' % profit)
+        for i in indexes:
+            out = (lots[i].day, lots[i].name, lots[i].price/10, lots[i].amount)
+            out_file.write('%d %s %f %d\n' % out)
+        out_file.close()
+    except Exception as exc:
+        print(exc)
+        sys.exit('Error writing to file')
 
 def read_lots_from_file(file_path):
     input_file = open(file_path, 'r')
@@ -58,24 +62,30 @@ def main():
     else:
         if args.input_file:
             lots_values, lots, S, N, M = read_lots_from_file(args.input_file)
+            print("Read {} lots".format(len(lots)))
             if args.algorithm == 'profile_optimized':
                 out = optimized_solve(lots_values, S)
                 profit, indexes = out[0], out[1:]
+                print("Number of obligations bougth: {}".format(len(indexes)))
                 format_output(indexes, profit, lots, args.output_file)
                 run(lots_values, S, N, M)
             else:
                 profit, indexes = solve(lots, S)
+                print("Number of obligations bougth : {}".format(len(indexes)))
                 format_output(indexes, profit, lots, args.output_file)
                 run(lots, S, N, M, nonoptimized=True)
         else:
             lots_values, lots = generate_input(args.N, args.M)
+            print("Generated {} lots".format(len(lots)))
             if args.algorithm == 'profile_optimized':
                 out = optimized_solve(lots_values, args.S)
                 profit, indexes = out[0], out[1:]
+                print("Number of obligations bougth: {}".format(len(indexes)))
                 format_output(indexes, profit, lots, args.output_file)
                 run(lots_values, args.S, args.N, args.M)
             else:
                 profit, indexes = solve(lots, args.S)
+                print("Number of obligations bougth: {}".format(len(indexes)))
                 format_output(indexes, profit, lots, args.output_file)
                 run(lots, args.S, args.N, args.M, nonoptimized=True)
 

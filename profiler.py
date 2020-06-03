@@ -32,6 +32,7 @@ def time_profile(lots, solver, s, n, m):
     print(n, m, s, el_time, sep=" ")
 
 def run(lots, s, n, m, nonoptimized=False):
+    print("Running profiling...")
     solver = solve if nonoptimized else optimized_solve
     # sys.stdout = open(output_file, 'w+')
     mem_profile(lots, solver, s)
