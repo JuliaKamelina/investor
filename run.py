@@ -66,12 +66,12 @@ def main():
             if args.algorithm == 'profile_optimized':
                 out = optimized_solve(lots_values, S)
                 profit, indexes = out[0], out[1:]
-                print("Number of obligations bougth: {}".format(len(indexes)))
+                print("Number of obligations bought: {}".format(len(indexes)))
                 format_output(indexes, profit, lots, args.output_file)
                 run(lots_values, S, N, M)
             else:
                 profit, indexes = solve(lots, S)
-                print("Number of obligations bougth : {}".format(len(indexes)))
+                print("Number of obligations bought: {}".format(len(indexes)))
                 format_output(indexes, profit, lots, args.output_file)
                 run(lots, S, N, M, nonoptimized=True)
         else:
@@ -80,12 +80,12 @@ def main():
             if args.algorithm == 'profile_optimized':
                 out = optimized_solve(lots_values, args.S)
                 profit, indexes = out[0], out[1:]
-                print("Number of obligations bougth: {}".format(len(indexes)))
+                print("Number of obligations bought: {}".format(len(indexes)))
                 format_output(indexes, profit, lots, args.output_file)
                 run(lots_values, args.S, args.N, args.M)
             else:
                 profit, indexes = solve(lots, args.S)
-                print("Number of obligations bougth: {}".format(len(indexes)))
+                print("Number of obligations bought: {}".format(len(indexes)))
                 format_output(indexes, profit, lots, args.output_file)
                 run(lots, args.S, args.N, args.M, nonoptimized=True)
 
